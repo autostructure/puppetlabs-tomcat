@@ -48,6 +48,18 @@ tomcat::instance { 'default':
 }
 ```
 
+If you are using a fully qualified version number, and you do not have a proxy, install with:
+
+```puppet
+tomcat_install { '/opt/tomcat':
+  ensure  => present,
+  version => '7.0.82',
+}
+tomcat::instance { 'default':
+  catalina_home => '/opt/tomcat',
+}
+```
+
 > Note: look up the correct version you want to install on the [version list](http://tomcat.apache.org/whichversion.html).
 
 ## Usage
@@ -57,8 +69,9 @@ tomcat::instance { 'default':
 ```puppet
 class { 'java': }
 
-tomcat::install { '/opt/tomcat9':
-  source_url => 'https://www.apache.org/dist/tomcat/tomcat-9/v9.0.x/bin/apache-tomcat-9.0.x.tar.gz'
+tomcat_install { '/opt/tomcat9':
+  ensure  => present,
+  version => '9.0.1',
 }
 tomcat::instance { 'tomcat9-first':
   catalina_home => '/opt/tomcat9',
@@ -116,7 +129,7 @@ tomcat::config::server::connector { 'tomcat7-ajp':
 ### I want to configure SSL and specify which protocols and ciphers to use
 
 ```puppet
-  file { $keystore_path: 
+  file { $keystore_path:
     ensure => present,
     source => $keystore_source,
     owner => $keystore_user,
@@ -139,7 +152,7 @@ tomcat::config::server::connector { 'tomcat7-ajp':
       'sslProtocol'         => $https_connector_ssl_protocol,
       'sslEnabledProtocols' => join($https_connector_ssl_protocols_enabled, ","),
       'ciphers'             => join($ciphers_enabled, ","),
-      
+
       'keystorePass'        => $keystore_pass.unwrap,
       'keystoreFile'        => $keystore_path,
     },
