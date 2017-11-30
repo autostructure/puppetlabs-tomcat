@@ -20,6 +20,10 @@ Puppet::Type.newtype(:tomcat_application) do
 
   newparam(:application_name, namevar: true) do
     desc "Specifies the application name."
+
+    munge do |value|
+      value.chomp('.war')
+    end
   end
 
   newparam(:application_source) do
