@@ -3,14 +3,14 @@ require 'rubygems/package'
 require 'open-uri'
 
 Puppet::Type.type(:tomcat_application).provide(:linux) do
-  commands :uncompress => 'jar'
+  commands uncompress: 'jar'
 
-  def initialize(value={})
+  def initialize(value = {})
     super(value)
   end
 
   def exists?
-    Dir.exists?("#{resource[:catalina_base]}/webapps/#{resource[:application_name]}")
+    Dir.exist?("#{resource[:catalina_base]}/webapps/#{resource[:application_name]}")
   end
 
   def destroy
@@ -26,17 +26,16 @@ Puppet::Type.type(:tomcat_application).provide(:linux) do
     FileUtils.mkdir_p application_location
 
     begin
-      open(resource[:application_source], :redirect => false) do |f|
-        File.open("#{war_location}", 'wb') do |file|
+      open(resource[:application_source], redirect: false) do |f|
+        File.open(war_location.to_s, 'wb') do |file|
           file.puts f.read
         end
         break
       end
-
     rescue OpenURI::HTTPRedirect => http_redirect
       begin
         open(http_redirect.uri, redirect: true) do |f|
-          File.open("#{war_location}", 'wb') do |file|
+          File.open(war_location.to_s, 'wb') do |file|
             file.puts f.read
           end
           break
@@ -49,7 +48,7 @@ Puppet::Type.type(:tomcat_application).provide(:linux) do
       uncompress('xf', "/tmp/#{resource[:application_name]}.war")
     end
 
-    File.delete("#{war_location}")
+    File.delete(war_location.to_s)
 
     FileUtils.chown_R resource[:user], resource[:group], application_location
   end

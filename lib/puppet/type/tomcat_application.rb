@@ -1,5 +1,5 @@
 Puppet::Type.newtype(:tomcat_application) do
-  desc "Installs the software into the given directory."
+  desc 'Installs the software into the given directory.'
 
   ensurable do
     defaultvalues
@@ -15,11 +15,11 @@ Puppet::Type.newtype(:tomcat_application) do
   end
 
   newparam(:catalina_base) do
-    desc "The directory of the Tomcat installation."
+    desc 'The directory of the Tomcat installation.'
   end
 
   newparam(:application_name, namevar: true) do
-    desc "Specifies the application name."
+    desc 'Specifies the application name.'
 
     munge do |value|
       value.chomp('.war')
@@ -27,34 +27,34 @@ Puppet::Type.newtype(:tomcat_application) do
   end
 
   newparam(:application_source) do
-    desc "Specifies the source to deploy the WAR from. A string containing a http(s):// URL."
+    desc 'Specifies the source to deploy the WAR from. A string containing a http(s):// URL.'
 
     validate do |value|
-      raise ArgumentError, "Application source is required." if value !~ /https?:\/\/[\S]+/
+      raise ArgumentError, 'Application source is required.' if value !~ %r{https?:\/\/[\S]+}
     end
   end
 
   newparam(:user) do
-    desc "Specifies the owner of the source installation directory."
+    desc 'Specifies the owner of the source installation directory.'
 
     defaultto 'tomcat'
   end
 
   newparam(:group) do
-    desc "Specifies the group of the source installation directory."
+    desc 'Specifies the group of the source installation directory.'
 
     defaultto 'tomcat'
   end
 
   validate do
     unless self[:catalina_base]
-      raise(Puppet::Error, "Catalina base is required.")
+      raise(Puppet::Error, 'Catalina base is required.')
     end
     unless self[:application_name]
-      raise(Puppet::Error, "Application name is required.")
+      raise(Puppet::Error, 'Application name is required.')
     end
     unless self[:application_source]
-      raise(Puppet::Error, "Application source is required.")
+      raise(Puppet::Error, 'Application source is required.')
     end
   end
 end

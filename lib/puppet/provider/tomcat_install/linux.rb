@@ -4,7 +4,7 @@ require 'zlib'
 require 'open-uri'
 
 Puppet::Type.type(:tomcat_install).provide(:linux) do
-  def initialize(value={})
+  def initialize(value = {})
     super(value)
   end
 
@@ -14,8 +14,8 @@ Puppet::Type.type(:tomcat_install).provide(:linux) do
     version = nil
 
     File.open("#{catalina_home}/RELEASE-NOTES", 'r').each_line do |li|
-      if li[/Version \d{1,2}\.\d{1,2}\.\d{1,2}/]
-        version = li[/\d{1,2}\.\d{1,2}\.\d{1,2}/]
+      if li[%r{Version \d{1,2}\.\d{1,2}\.\d{1,2}}]
+        version = li[%r{\d{1,2}\.\d{1,2}\.\d{1,2}}]
         break
       end
     end
@@ -40,7 +40,7 @@ Puppet::Type.type(:tomcat_install).provide(:linux) do
       "https://www.apache.org/dyn/closer.cgi?action=download&filename=tomcat/tomcat-#{tomcat_major}/v#{resource[:version]}/bin/apache-tomcat-#{resource[:version]}.tar.gz",
       "https://www-us.apache.org/dist/tomcat/tomcat-#{tomcat_major}/v#{resource[:version]}/bin/apache-tomcat-#{resource[:version]}.tar.gz",
       "https://www.apache.org/dist/tomcat/tomcat-#{tomcat_major}/v#{resource[:version]}/bin/apache-tomcat-#{resource[:version]}.tar.gz",
-      "https://archive.apache.org/dist/tomcat/tomcat-#{tomcat_major}/v#{resource[:version]}/bin/apache-tomcat-#{resource[:version]}.tar.gz"
+      "https://archive.apache.org/dist/tomcat/tomcat-#{tomcat_major}/v#{resource[:version]}/bin/apache-tomcat-#{resource[:version]}.tar.gz",
     ].freeze
 
     FileUtils.mkdir_p resource[:catalina_home]
@@ -52,7 +52,7 @@ Puppet::Type.type(:tomcat_install).provide(:linux) do
       tomcat_url_index += 1
 
       begin
-        open(url, :redirect => false) do |f|
+        open(url, redirect: false) do |f|
           File.open("#{resource[:catalina_home]}/apache-tomcat-#{resource[:version]}.tar.gz", 'wb') do |file|
             file.puts f.read
           end
